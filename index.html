@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nicholas Joel Vallverdu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,200;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+/* ─────────────── RESET & ROOT ─────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:        #05050a;
+  --bg1:       #08080f;
+  --bg2:       #0c0c16;
+  --surface:   rgba(255,255,255,0.03);
+  --surface2:  rgba(255,255,255,0.055);
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.13);
+  --text:      #ececf4;
+  --text2:     rgba(236,236,244,0.52);
+  --text3:     rgba(236,236,244,0.26);
+  --blue:      #4d8fff;
+  --blue2:     #7ab0ff;
+  --violet:    #a78bfa;
+  --cyan:      #22d3ee;
+  --emerald:   #34d399;
+  --amber:     #fbbf24;
+  --rose:      #fb7185;
+  --glow-blue: rgba(77,143,255,0.22);
+  --glow-vio:  rgba(167,139,250,0.18);
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',system-ui,sans-serif;
+  overflow-x:hidden;
+}
+/* ─────────────── CURSOR ─────────────── */
+body{cursor:none}
+#cur-dot{
+  position:fixed;z-index:9999;pointer-events:none;
+  width:8px;height:8px;border-radius:50%;
+  background:#fff;
+  top:0;left:0;
+  transform:translate(-50%,-50%);
+  will-change:transform;
+  transition:width 0.25s,height 0.25s,background 0.25s,opacity 0.25s;
+}
+#cur-ring{
+  position:fixed;z-index:9998;pointer-events:none;
+  width:32px;height:32px;border-radius:50%;
+  border:1.5px solid rgba(77,143,255,0.65);
+  top:0;left:0;
+  transform:translate(-50%,-50%);
+  will-change:transform;
+  transition:width 0.35s cubic-bezier(.16,1,.3,1),height 0.35s cubic-bezier(.16,1,.3,1),border-color 0.3s,opacity 0.3s;
+}
+body.cur-hover #cur-dot{width:5px;height:5px;background:var(--cyan)}
+body.cur-hover #cur-ring{width:44px;height:44px;border-color:rgba(34,211,238,0.5)}
+body.cur-click #cur-dot{width:4px;height:4px}
+body.cur-click #cur-ring{width:22px;height:22px}
+@media(pointer:coarse){body{cursor:auto}#cur-dot,#cur-ring{display:none}}
+
+
+/* ─────────────── CANVAS ─────────────── */
+#c{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ─────────────── GRAIN ─────────────── */
+.grain{
+  position:fixed;inset:0;z-index:2;pointer-events:none;
+  opacity:0.032;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grainShift 0.4s steps(1) infinite;
+}
+@keyframes grainShift{
+  0%{background-position:0 0}25%{background-position:-20px 15px}
+  50%{background-position:10px -10px}75%{background-position:-15px 5px}100%{background-position:5px 20px}
+}
+
+/* ─────────────── NAV ─────────────── */
+nav{
+  position:fixed;top:16px;left:50%;transform:translateX(-50%);
+  z-index:800;
+  display:flex;align-items:center;gap:0;
+  background:rgba(8,8,15,0.7);
+  backdrop-filter:blur(28px) saturate(180%);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  border:1px solid var(--border2);
+  border-radius:999px;
+  padding:0.35rem 0.45rem;
+  opacity:0;
+  animation:dropIn 0.8s cubic-bezier(.16,1,.3,1) 0.2s forwards;
+  box-shadow:0 0 0 1px rgba(255,255,255,0.03),0 8px 32px rgba(0,0,0,0.5);
+}
+@keyframes dropIn{from{opacity:0;transform:translateX(-50%) translateY(-12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+.nav-logo{
+  font-family:'Syne',sans-serif;
+  font-size:0.78rem;font-weight:700;
+  letter-spacing:0.04em;
+  color:var(--text);
+  padding:0.42rem 1rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.nav-logo-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--emerald);
+  box-shadow:0 0 8px var(--emerald),0 0 14px rgba(52,211,153,0.4);
+  animation:breathe 2.5s ease-in-out infinite;
+}
+@keyframes breathe{0%,100%{box-shadow:0 0 8px var(--emerald),0 0 14px rgba(52,211,153,0.4)}50%{box-shadow:0 0 12px var(--emerald),0 0 24px rgba(52,211,153,0.6)}}
+.nav-sep{width:1px;height:20px;background:var(--border2)}
+.nav-links{display:flex;list-style:none;padding:0 0.3rem}
+.nav-links a{
+  display:block;font-size:0.76rem;font-weight:400;
+  color:var(--text2);text-decoration:none;
+  padding:0.42rem 0.85rem;border-radius:999px;
+  transition:color 0.2s,background 0.2s;
+}
+.nav-links a:hover{color:var(--text);background:var(--surface2)}
+
+/* ─────────────── WRAPPER ─────────────── */
+.page{position:relative;z-index:3}
+
+/* ─────────────── HERO ─────────────── */
+.hero{
+  min-height:100svh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:7rem 1.5rem 6rem;
+  position:relative;
+  isolation:isolate;
+}
+
+/* hero glow ring */
+.hero-glow{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-56%);
+  width:min(900px,120vw);
+  height:min(900px,120vw);
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(77,143,255,0.055) 0%,rgba(167,139,250,0.03) 40%,transparent 70%);
+  pointer-events:none;
+  animation:heroPulse 6s ease-in-out infinite;
+}
+@keyframes heroPulse{0%,100%{transform:translate(-50%,-56%) scale(1)}50%{transform:translate(-50%,-56%) scale(1.06)}}
+
+.hero-status{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  font-size:0.7rem;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--text2);
+  border:1px solid var(--border2);
+  background:var(--surface);
+  backdrop-filter:blur(12px);
+  padding:0.4rem 1rem;border-radius:999px;
+  opacity:0;animation:riseIn 0.7s cubic-bezier(.16,1,.3,1) 0.4s forwards;
+}
+.status-pip{width:5px;height:5px;border-radius:50%;background:var(--emerald);box-shadow:0 0 6px var(--emerald)}
+
+.hero-title{
+  margin-top:1.8rem;
+  font-family:'Syne',sans-serif;
+  font-size:clamp(3.5rem,10vw,9rem);
+  font-weight:800;
+  line-height:0.92;
+  letter-spacing:-0.03em;
+  opacity:0;animation:riseIn 1s cubic-bezier(.16,1,.3,1) 0.6s forwards;
+}
+.ht-line1{
+  display:block;
+  background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,0.82) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.ht-line2{
+  display:block;margin-top:0.04em;
+  background:linear-gradient(135deg,var(--blue) 0%,var(--violet) 45%,var(--cyan) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  font-weight:700;font-style:italic;
+}
+
+.hero-sub{
+  margin-top:2rem;
+  font-size:1.05rem;font-weight:300;
+  color:var(--text2);max-width:44ch;line-height:1.75;
+  opacity:0;animation:riseIn 0.8s cubic-bezier(.16,1,.3,1) 0.85s forwards;
+}
+
+/* tags */
+.hero-tags{
+  display:flex;flex-wrap:wrap;gap:0.45rem;
+  justify-content:center;margin-top:2rem;
+  opacity:0;animation:riseIn 0.8s cubic-bezier(.16,1,.3,1) 1.05s forwards;
+}
+.tag{
+  font-size:0.69rem;font-weight:400;letter-spacing:0.02em;
+  padding:0.32rem 0.8rem;border-radius:999px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text3);
+  transition:all 0.25s;
+}
+.tag:hover{border-color:var(--border2);color:var(--text2);background:var(--surface2)}
+
+.hero-btns{
+  display:flex;gap:0.7rem;flex-wrap:wrap;justify-content:center;
+  margin-top:2.4rem;
+  opacity:0;animation:riseIn 0.8s cubic-bezier(.16,1,.3,1) 1.2s forwards;
+}
+.btn-p,.btn-g{
+  display:inline-flex;align-items:center;gap:0.45rem;
+  font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:500;
+  padding:0.65rem 1.5rem;border-radius:10px;
+  text-decoration:none;border:none;cursor:none;
+  transition:all 0.3s cubic-bezier(.16,1,.3,1);
+}
+.btn-p{
+  background:linear-gradient(135deg,var(--blue),#3a7bd5);
+  color:#fff;
+  box-shadow:0 0 0 1px rgba(77,143,255,0.4),0 4px 24px rgba(77,143,255,0.28);
+}
+.btn-p:hover{
+  box-shadow:0 0 0 1px rgba(77,143,255,0.5),0 8px 36px rgba(77,143,255,0.42);
+  transform:translateY(-2px) scale(1.02);
+}
+.btn-g{
+  background:var(--surface);color:var(--text2);
+  border:1px solid var(--border2);backdrop-filter:blur(10px);
+}
+.btn-g:hover{border-color:var(--border2);color:var(--text);background:var(--surface2);transform:translateY(-2px)}
+
+/* scroll arrow */
+.scroll-arrow{
+  position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:0.6rem;
+  opacity:0;animation:fadeIn 1s ease 2.2s forwards;
+}
+.sa-label{font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text3)}
+.sa-icon{
+  width:24px;height:38px;border:1px solid var(--border2);border-radius:999px;
+  display:flex;align-items:flex-start;justify-content:center;padding-top:5px;
+}
+.sa-dot{
+  width:4px;height:7px;background:var(--text2);border-radius:2px;
+  animation:scrollDot 1.9s ease-in-out infinite;
+}
+@keyframes scrollDot{0%,100%{transform:translateY(0);opacity:1}70%{transform:translateY(10px);opacity:0.2}}
+
+/* ─────────────── TYPEWRITER ─────────────── */
+.tw-cursor{
+  display:inline-block;
+  color:var(--blue);
+  font-weight:300;
+  animation:twBlink 0.9s step-end infinite;
+  margin-left:1px;
+}
+@keyframes twBlink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ─────────────── SECTION ─────────────── */
+.s{
+  max-width:1060px;margin:0 auto;
+  padding:6rem 1.5rem;
+  opacity:0;transform:translateY(36px);
+  transition:opacity 0.9s cubic-bezier(.16,1,.3,1),transform 0.9s cubic-bezier(.16,1,.3,1);
+}
+.s.in{opacity:1;transform:translateY(0)}
+
+.s-ey{
+  display:flex;align-items:center;gap:0.6rem;
+  font-size:0.62rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--blue);margin-bottom:0.65rem;
+}
+.s-ey::before{content:'';width:18px;height:1px;background:currentColor;opacity:0.8}
+.s-h{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(1.9rem,4.5vw,3rem);
+  font-weight:700;letter-spacing:-0.025em;
+  color:var(--text);
+}
+
+/* line separator */
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent);margin:0 1.5rem}
+
+/* ─────────────── ABOUT BENTO ─────────────── */
+.bento{
+  display:grid;
+  grid-template-columns:1fr 340px;
+  grid-template-rows:auto auto;
+  gap:10px;
+}
+.bento-card{
+  background:var(--bg1);
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+  position:relative;
+  transition:border-color 0.3s;
+}
+.bento-card:hover{border-color:var(--border2)}
+/* top-edge shine */
+.bento-card::before{
+  content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.09),transparent);
+}
+.bc-pad{padding:2.2rem 2.4rem}
+.bc-sm{padding:1.8rem 2rem}
+
+.about-prose{font-size:0.95rem;line-height:1.9;color:var(--text2);font-weight:300}
+.about-prose strong{color:var(--text);font-weight:500}
+
+.data-table{margin-top:1.8rem;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.dt-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0.7rem 1.1rem;border-bottom:1px solid var(--border);
+  gap:1rem;
+  transition:background 0.2s;
+}
+.dt-row:last-child{border-bottom:none}
+.dt-row:hover{background:rgba(255,255,255,0.022)}
+.dt-k{font-size:0.62rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3)}
+.dt-v{font-size:0.83rem;color:var(--text2);font-weight:300;text-align:right}
+
+/* stat cells */
+.stat-cell{
+  display:flex;flex-direction:column;justify-content:space-between;
+  gap:0.5rem;
+}
+.stat-n{
+  font-family:'Syne',sans-serif;
+  font-size:4.5rem;font-weight:800;line-height:1;
+  letter-spacing:-0.04em;
+  background:linear-gradient(135deg,var(--blue),var(--violet) 60%,var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.stat-d{font-size:0.8rem;color:var(--text2);font-weight:300;line-height:1.45;max-width:18ch}
+
+/* bento icon pill */
+.b-icon{
+  width:40px;height:40px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;margin-bottom:1.4rem;
+  border:1px solid var(--border);
+}
+.bi-blue  {background:rgba(77,143,255,0.1)}
+.bi-vio   {background:rgba(167,139,250,0.1)}
+.bi-em    {background:rgba(52,211,153,0.08)}
+.bi-amber {background:rgba(251,191,36,0.08)}
+.bi-rose  {background:rgba(251,113,133,0.08)}
+.bi-cyan  {background:rgba(34,211,238,0.08)}
+
+/* ─────────────── CARD GRID ─────────────── */
+/* Unified border grid like Linear */
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
+  border:1px solid var(--border);
+  border-radius:18px;overflow:hidden;
+}
+.card-grid .gc{
+  background:var(--bg1);
+  padding:1.8rem 2rem;
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+  transition:background 0.25s;
+}
+/* remove double borders */
+.card-grid .gc:nth-child(n):last-child,
+.card-grid .gc:nth-last-child(-n+3){border-bottom:none}
+.card-grid .gc:nth-child(3n){border-right:none}
+@media(max-width:900px){.card-grid .gc:nth-child(3n){border-right:1px solid var(--border)}.card-grid .gc:nth-child(2n){border-right:none}}
+@media(max-width:600px){.card-grid .gc{border-right:none}}
+
+.gc.cl{cursor:none}
+.gc:hover{background:var(--bg2)}
+
+/* card shimmer sweep on hover */
+.gc::after{
+  content:'';position:absolute;
+  top:0;left:-120%;width:60%;height:100%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,0.025) 50%,transparent);
+  transform:skewX(-15deg);
+  transition:left 0.55s ease;
+}
+.gc.cl:hover::after{left:160%}
+
+.gc-num{font-size:0.58rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);margin-bottom:1.1rem}
+.gc-t{font-size:0.97rem;font-weight:500;color:var(--text);line-height:1.3;margin-bottom:0.22rem}
+.gc-s{font-size:0.64rem;font-weight:500;letter-spacing:0.06em;color:var(--blue);margin-bottom:0.9rem;text-transform:uppercase}
+.gc-b{font-size:0.82rem;line-height:1.72;color:var(--text2);font-weight:300}
+
+.chip{
+  display:inline-flex;align-items:center;gap:0.28rem;
+  font-size:0.6rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;
+  padding:0.24rem 0.65rem;border-radius:999px;margin-top:1rem;
+}
+.chip::before{content:'';width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0}
+.ch-blue{background:rgba(77,143,255,0.1);color:var(--blue);border:1px solid rgba(77,143,255,0.2)}
+.ch-em  {background:rgba(52,211,153,0.08);color:var(--emerald);border:1px solid rgba(52,211,153,0.2)}
+.ch-am  {background:rgba(251,191,36,0.08);color:var(--amber);border:1px solid rgba(251,191,36,0.18)}
+
+.gc-cta{
+  display:flex;align-items:center;gap:0.35rem;
+  margin-top:1.3rem;
+  font-size:0.73rem;font-weight:500;
+  color:var(--blue);
+  opacity:0;transform:translateX(-5px);
+  transition:opacity 0.25s,transform 0.25s cubic-bezier(.16,1,.3,1);
+}
+.gc.cl:hover .gc-cta{opacity:1;transform:translateX(0)}
+.arr{display:inline-block;transition:transform 0.25s}
+.gc.cl:hover .arr{transform:translateX(4px)}
+
+/* ─────────────── QUOTE STRIP ─────────────── */
+.quote-strip{
+  border:1px solid var(--border);border-radius:18px;
+  background:var(--bg1);overflow:hidden;
+  display:grid;grid-template-columns:1fr 1fr;
+}
+.quote-item{
+  padding:2.2rem 2.4rem;
+  border-right:1px solid var(--border);
+  position:relative;
+  transition:background 0.25s;
+}
+.quote-item:last-child{border-right:none}
+.quote-item:hover{background:var(--bg2)}
+.qi-mark{
+  font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:800;
+  line-height:1;color:var(--blue);opacity:0.22;margin-bottom:0.6rem;
+  display:block;
+}
+.qi-text{font-size:0.87rem;line-height:1.75;color:var(--text2);font-weight:300;font-style:italic;margin-bottom:1.4rem}
+.qi-from{font-size:0.68rem;font-weight:500;color:var(--text3);letter-spacing:0.06em}
+.qi-name{font-size:0.85rem;font-weight:500;color:var(--text);margin-top:0.15rem}
+.qi-role{font-size:0.72rem;color:var(--text3);font-weight:300}
+
+/* ─────────────── CONTACT ─────────────── */
+.contact-bento{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  border:1px solid var(--border);border-radius:18px;overflow:hidden;
+}
+.cb-item{
+  background:var(--bg1);padding:1.5rem 1.8rem;
+  border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+  transition:background 0.22s;
+}
+.cb-item:hover{background:var(--bg2)}
+.cb-k{font-size:0.58rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3);margin-bottom:0.4rem}
+.cb-v{font-size:0.88rem;color:var(--text2);font-weight:300}
+.cb-name{font-size:0.96rem;color:var(--text);font-weight:500}
+
+/* ─────────────── FOOTER ─────────────── */
+footer{
+  position:relative;z-index:3;
+  border-top:1px solid var(--border);
+  padding:1.8rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:0.8rem;
+}
+.f-logo{
+  display:flex;align-items:center;gap:0.5rem;
+  font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;color:var(--text2);
+}
+.f-logo-dot{width:5px;height:5px;border-radius:50%;background:var(--emerald);box-shadow:0 0 6px var(--emerald)}
+footer p{font-size:0.65rem;letter-spacing:0.06em;color:var(--text3)}
+
+/* ─────────────── MODAL ─────────────── */
+.mo{
+  position:fixed;inset:0;z-index:900;
+  background:rgba(3,3,8,0.8);
+  backdrop-filter:blur(32px) saturate(160%);
+  -webkit-backdrop-filter:blur(32px) saturate(160%);
+  display:flex;align-items:center;justify-content:center;
+  padding:1.5rem;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.3s ease;
+}
+.mo.open{opacity:1;pointer-events:all}
+
+.mo-box{
+  background:rgba(10,10,18,0.97);
+  border:1px solid var(--border2);
+  border-radius:22px;
+  max-width:660px;width:100%;max-height:88vh;
+  overflow-y:auto;
+  position:relative;
+  transform:scale(0.95) translateY(18px);
+  transition:transform 0.45s cubic-bezier(.16,1,.3,1);
+  box-shadow:0 48px 96px rgba(0,0,0,0.75),0 0 0 1px rgba(255,255,255,0.04),inset 0 1px 0 rgba(255,255,255,0.07);
+}
+.mo.open .mo-box{transform:scale(1) translateY(0)}
+
+.mo-hd{
+  padding:2rem 2.2rem 1.6rem;
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;
+  background:rgba(10,10,18,0.98);
+  backdrop-filter:blur(20px);
+  border-radius:22px 22px 0 0;z-index:2;
+}
+.mo-close{
+  position:absolute;top:1.6rem;right:1.8rem;
+  width:30px;height:30px;border-radius:8px;
+  background:var(--surface);border:1px solid var(--border);
+  cursor:none;display:flex;align-items:center;justify-content:center;
+  color:var(--text2);font-size:0.8rem;
+  transition:all 0.2s;
+}
+.mo-close:hover{background:var(--surface2);color:var(--text);border-color:var(--border2)}
+
+.mo-ey{font-size:0.6rem;font-weight:600;letter-spacing:0.17em;text-transform:uppercase;color:var(--blue);margin-bottom:0.4rem}
+.mo-ti{font-family:'Syne',sans-serif;font-size:1.45rem;font-weight:700;color:var(--text);letter-spacing:-0.02em;line-height:1.2}
+.mo-or{font-size:0.74rem;color:var(--text3);margin-top:0.3rem;font-weight:300}
+
+.mo-bd{padding:1.8rem 2.2rem 2.2rem}
+.mo-text{font-size:0.9rem;line-height:1.88;color:var(--text2);font-weight:300}
+.mo-text p{margin-bottom:1.05rem}
+.mo-text p:last-child{margin-bottom:0}
+
+.mo-meta{
+  margin-top:1.5rem;padding-top:1.4rem;
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:1.1rem;
+}
+.mm-i{display:flex;flex-direction:column;gap:0.2rem}
+.mm-k{font-size:0.57rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--text3)}
+.mm-v{font-size:0.83rem;color:var(--text);font-weight:300}
+
+/* ─────────────── ANIMATIONS ─────────────── */
+@keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{to{opacity:1}}
+
+/* ─────────────── SCROLLBAR ─────────────── */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.07);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.13)}
+
+/* ─────────────── RESPONSIVE ─────────────── */
+@media(max-width:860px){
+  nav{top:10px;width:calc(100% - 2rem);border-radius:14px}
+  .bento{grid-template-columns:1fr}
+  .quote-strip{grid-template-columns:1fr}
+  .quote-item{border-right:none;border-bottom:1px solid var(--border)}
+  .quote-item:last-child{border-bottom:none}
+  .s{padding:4rem 1.2rem}
+  .hr{margin:0 1.2rem}
+}
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+
+<!-- Animated canvas -->
+<canvas id="c"></canvas>
+<div class="grain"></div>
+
+<!-- Floating pill nav -->
+<nav>
+  <span class="nav-logo"><span class="nav-logo-dot"></span>NJV</span>
+  <div class="nav-sep"></div>
+  <ul class="nav-links">
+    <li><a href="#about">About Me</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#certs">Certifications</a></li>
+    <li><a href="#recs">Recommendation Letters</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page">
+
+<!-- ────── HERO ────── -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-status">
+    <span class="status-pip"></span>
+    Available · Open to opportunities
+  </div>
+  <h1 class="hero-title">
+    <span class="ht-line1">Nicholas</span>
+    <span class="ht-line2">Joel Vallverdu</span>
+  </h1>
+  <p class="hero-sub"><span id="typewriter"></span><span class="tw-cursor">|</span></p>
+  <div class="hero-tags">
+    <span class="tag">Bilingual</span>
+    <span class="tag">AED Certified</span>
+    <span class="tag">CPR Certified</span>
+    <span class="tag">First Aid Certified</span>
+    <span class="tag">Certified in Bloodborne Pathogens and Infection Control</span>
+    <span class="tag">Dual Enrollment Student</span>
+  </div>
+  <div class="hero-btns">
+    <a href="#about" class="btn-p">Learn More</a>
+    <a href="#contact" class="btn-g">Say Hello</a>
+  </div>
+  <div class="scroll-arrow">
+    <div class="sa-icon"><div class="sa-dot"></div></div>
+    <span class="sa-label">Scroll</span>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- ────── ABOUT ────── -->
+<div class="s" id="about">
+  <div style="margin-bottom:2.8rem">
+    <p class="s-ey">About Me</p>
+    <h2 class="s-h">More About Me!!!</h2>
+  </div>
+  <div class="bento">
+    <!-- main prose card -->
+    <div class="bento-card bc-pad" style="grid-row:span 2">
+      <p class="about-prose">
+        Hi! My name is <strong>Nicholas Joel Vallverdu</strong>. I'm a 16-year-old bilingual student currently studying at both Florida Virtual School and Polk State College through a dual-enrollment program — and I'm actively looking for my first job.<br><br>
+        I'm a hard worker who genuinely enjoys learning new things and taking on new challenges. Even without formal work experience yet, I'm someone who shows up prepared, takes things seriously, and is ready to contribute to any team I join.<br><br>
+        I hold certifications in First Aid, CPR/AED, and Bloodborne Pathogens, and I've received letters of recommendation from two of my teachers. I'd love to connect — feel free to reach out anytime.
+      </p>
+      <div class="data-table">
+        <div class="dt-row"><span class="dt-k">Name</span><span class="dt-v">Nicholas Joel Vallverdu</span></div>
+        <div class="dt-row"><span class="dt-k">Age</span><span class="dt-v">16 years old</span></div>
+        <div class="dt-row"><span class="dt-k">Languages</span><span class="dt-v">English &amp; Spanish</span></div>
+        <div class="dt-row"><span class="dt-k">Email</span><span class="dt-v">DoGoodGetGood09@Gmail.com</span></div>
+        <div class="dt-row"><span class="dt-k">Status</span><span class="dt-v">Seeking first employment</span></div>
+      </div>
+      <div class="privacy-note">
+         &nbsp;Full personal details, references, and official documents are available upon request. Just send me an email and I'll be happy to share what you need.
+      </div>
+    </div>
+    <!-- stat 1 -->
+    <div class="bento-card bc-sm stat-cell">
+      <div>
+        <div class="stat-n">2</div>
+        <div class="stat-d">Active certifications from nationally recognized organizations</div>
+      </div>
+      <div class="b-icon bi-blue" style="margin-bottom:0">🏅</div>
+    </div>
+    <!-- stat 2 -->
+    <div class="bento-card bc-sm stat-cell">
+      <div>
+        <div class="stat-n">2</div>
+        <div class="stat-d">Letters of recommendation from FLVS instructors</div>
+      </div>
+      <div class="b-icon bi-vio" style="margin-bottom:0">✉️</div>
+    </div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- ────── EDUCATION ────── -->
+<div class="s" id="education">
+  <div style="margin-bottom:2.8rem">
+    <p class="s-ey">Education</p>
+    <h2 class="s-h">Academic History</h2>
+  </div>
+  <div class="card-grid">
+    <div class="gc">
+      <div class="b-icon bi-blue">🎓</div>
+      <p class="gc-num">01 — Higher Education</p>
+      <p class="gc-t">Polk State College</p>
+      <p class="gc-s">2025 – Present</p>
+      <p class="gc-b">Dual-enrollment college coursework alongside high school. On track to graduate high school having already earned an Associate of Arts degree.</p>
+      <span class="chip ch-blue">In Progress</span>
+    </div>
+    <div class="gc">
+      <div class="b-icon bi-vio">📘</div>
+      <p class="gc-num">02 — High School</p>
+      <p class="gc-t">Florida Virtual School (FLVS)</p>
+      <p class="gc-s">2022 – Present</p>
+      <p class="gc-b">Completing high school through FLVS with honors-level achievement in Anatomy & Physiology and Health Science Foundations.</p>
+      <span class="chip ch-blue">In Progress</span>
+    </div>
+    <div class="gc">
+      <div class="b-icon bi-em">🌱</div>
+      <p class="gc-num">03 — Elementary & Middle</p>
+      <p class="gc-t">Florida Virtual School (FLVS)</p>
+      <p class="gc-s">2014 – 2021</p>
+      <p class="gc-b">Completed K–8 education through FLVS, building the academic foundation carried into advanced high school and college-level work.</p>
+      <span class="chip ch-em">Completed</span>
+    </div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- ────── CERTIFICATIONS ────── -->
+<div class="s" id="certs">
+  <div style="margin-bottom:2.8rem">
+    <p class="s-ey">Certifications</p>
+    <h2 class="s-h">Credentials</h2>
+  </div>
+  <div class="card-grid">
+    <div class="gc cl clickable" onclick="openM('cert1')">
+      <div class="b-icon bi-rose">❤️</div>
+      <p class="gc-num">01 — American Red Cross</p>
+      <p class="gc-t">Adult, Child & Baby First Aid / CPR / AED</p>
+      <p class="gc-s">Valid Until Sept 30, 2027</p>
+      <p class="gc-b">Completed all requirements for the American Red Cross online program. Certificate ID: 0231URE. Eligible for in-person Skills Session within 90 days.</p>
+      <span class="chip ch-em">Valid Through 2027</span>
+      <div class="gc-cta">View Certificate <span class="arr">→</span></div>
+    </div>
+    <div class="gc cl clickable" onclick="openM('cert2')">
+      <div class="b-icon bi-amber">🧬</div>
+      <p class="gc-num">02 — FMES</p>
+      <p class="gc-t">Bloodborne Pathogens & Infection Control</p>
+      <p class="gc-s">Certified Sept 29, 2025</p>
+      <p class="gc-b">Certification by Florida Medical Educational Services covering bloodborne pathogen protocols and infection control for healthcare environments.</p>
+      <span class="chip ch-am">Certified</span>
+      <div class="gc-cta">View Details <span class="arr">→</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- ────── RECOMMENDATIONS ────── -->
+<div class="s" id="recs">
+  <div style="margin-bottom:2.8rem">
+    <p class="s-ey">Recommendations</p>
+    <h2 class="s-h">Letters of Recommendation</h2>
+  </div>
+  <!-- quote strip -->
+  <div class="quote-strip" style="margin-bottom:1rem">
+    <div class="quote-item">
+      <span class="qi-mark">"</span>
+      <p class="qi-text">Nicholas is a student who not only fits this category of exceptionalism, but he has raised the bar for others.</p>
+      <div class="qi-from">
+        <div class="qi-name">Paula Brusco</div>
+        <div class="qi-role">Anatomy & Physiology Honors · FLVS</div>
+      </div>
+    </div>
+    <div class="quote-item">
+      <span class="qi-mark">"</span>
+      <p class="qi-text">He possesses the intellect, work ethic, and compassion that are essential for success in medicine and beyond.</p>
+      <div class="qi-from">
+        <div class="qi-name">Alexandra Smith</div>
+        <div class="qi-role">Health Science Foundations · FLVS</div>
+      </div>
+    </div>
+  </div>
+  <!-- rec cards -->
+  <div class="card-grid">
+    <div class="gc cl clickable" onclick="openM('rec1')">
+      <div class="b-icon bi-blue">✉️</div>
+      <p class="gc-num">01 — February 6, 2026</p>
+      <p class="gc-t">Paula Brusco</p>
+      <p class="gc-s">Anatomy & Physiology Honors · FLVS</p>
+      <p class="gc-b">Reserved for top-tier students headed toward the medical field. Highlights Nicholas's medical blog on the nervous system, discussion-based depth, and academic maturity rare in high school.</p>
+      <div class="gc-cta">Read Full Letter <span class="arr">→</span></div>
+    </div>
+    <div class="gc cl clickable" onclick="openM('rec2')">
+      <div class="b-icon bi-cyan">✉️</div>
+      <p class="gc-num">02 — February 2, 2026</p>
+      <p class="gc-t">Alexandra Smith</p>
+      <p class="gc-s">Health Science Foundations · FLVS</p>
+      <p class="gc-b">Describes Nicholas as one of the most dedicated and intellectually curious students encountered — consistently punctual, meticulous, and driven toward a career in medicine.</p>
+      <div class="gc-cta">Read Full Letter <span class="arr">→</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- ────── CONTACT ────── -->
+<div class="s" id="contact">
+  <div style="margin-bottom:2.8rem">
+    <p class="s-ey">Contact</p>
+    <h2 class="s-h">Get in Touch</h2>
+  </div>
+  <div class="contact-bento">
+    <div class="cb-item">
+      <div class="cb-k">Email</div>
+      <div class="cb-v">DoGoodGetGood09@Gmail.com</div>
+    </div>
+    <div class="cb-item">
+      <div class="cb-k">Address</div>
+      <div class="cb-v">3919 Beverly Dr.</div>
+    </div>
+    <div class="cb-item">
+      <div class="cb-k">Reference</div>
+      <div class="cb-name">Christian Vallverdu</div>
+      <div class="cb-k" style="margin-top:0.5rem">Phone</div>
+      <div class="cb-v">407-347-4708</div>
+    </div>
+    <div class="cb-item" style="border-right:none">
+      <div class="cb-k">Reference</div>
+      <div class="cb-name">Christina Zanetti</div>
+      <div class="cb-k" style="margin-top:0.5rem">Phone</div>
+      <div class="cb-v">407-347-4714</div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="f-logo"><span class="f-logo-dot"></span> Nicholas Joel Vallverdu</div>
+  <p>Contact for additional information or official documents</p>
+  <p>© 2026</p>
+</footer>
+
+</div><!-- /page -->
+
+<!-- ────── MODAL ────── -->
+<div class="mo" id="mo" onclick="closeOut(event)">
+  <div class="mo-box">
+    <div class="mo-hd">
+      <button class="mo-close" onclick="closeM()">✕</button>
+      <p class="mo-ey" id="mo-ey"></p>
+      <h2 class="mo-ti" id="mo-ti"></h2>
+      <p class="mo-or" id="mo-or"></p>
+    </div>
+    <div class="mo-bd">
+      <div class="mo-text" id="mo-bd"></div>
+      <div class="mo-meta" id="mo-mt"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── CUSTOM CURSOR ── */
+(function(){
+  const dot  = document.getElementById('cur-dot');
+  const ring = document.getElementById('cur-ring');
+  // skip on touch devices
+  if(window.matchMedia('(pointer:coarse)').matches) return;
+
+  let mx=0,my=0,rx=0,ry=0,raf;
+
+  document.addEventListener('mousemove',e=>{
+    mx=e.clientX; my=e.clientY;
+    dot.style.left=mx+'px'; dot.style.top=my+'px';
+  });
+
+  // ring follows with smooth lerp
+  function lerp(a,b,t){return a+(b-a)*t}
+  function tick(){
+    rx=lerp(rx,mx,0.12); ry=lerp(ry,my,0.12);
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    raf=requestAnimationFrame(tick);
+  }
+  tick();
+
+  // hover state
+  const hoverSel='a,button,.gc.cl,.nav-links a,.btn-p,.btn-g,.mo-close,.bento-card,.quote-item,.cb-item';
+  document.addEventListener('mouseover',e=>{
+    if(e.target.closest(hoverSel)) document.body.classList.add('cur-hover');
+  });
+  document.addEventListener('mouseout',e=>{
+    if(e.target.closest(hoverSel)) document.body.classList.remove('cur-hover');
+  });
+
+  // click pulse
+  document.addEventListener('mousedown',()=>document.body.classList.add('cur-click'));
+  document.addEventListener('mouseup',  ()=>document.body.classList.remove('cur-click'));
+
+  // hide when leaving window, show when entering
+  document.addEventListener('mouseleave',()=>{dot.style.opacity='0';ring.style.opacity='0'});
+  document.addEventListener('mouseenter',()=>{dot.style.opacity='1';ring.style.opacity='1'});
+})();
+
+/* ── TYPEWRITER ── */
+const twEl = document.getElementById('typewriter');
+const phrases = [
+  'Bilingual dual-enrollment student.',
+  'Certified in First Aid, CPR & AED.',
+  'Certified in Bloodborne Pathogens.',
+  'Seeking first employment.',
+  'Dedicated to learning and growing.',
+];
+let pi=0, ci=0, deleting=false, pauseTimer=null;
+function typeStep(){
+  const phrase = phrases[pi];
+  if(!deleting){
+    twEl.textContent = phrase.slice(0, ci+1);
+    ci++;
+    if(ci === phrase.length){
+      deleting = true;
+      pauseTimer = setTimeout(typeStep, 2200);
+      return;
+    }
+    setTimeout(typeStep, 48 + Math.random()*28);
+  } else {
+    twEl.textContent = phrase.slice(0, ci-1);
+    ci--;
+    if(ci === 0){
+      deleting = false;
+      pi = (pi+1) % phrases.length;
+      setTimeout(typeStep, 380);
+      return;
+    }
+    setTimeout(typeStep, 22 + Math.random()*14);
+  }
+}
+setTimeout(typeStep, 1400);
+
+/* ── CANVAS BG ── */
+const canvas = document.getElementById('c');
+const ctx    = canvas.getContext('2d');
+let W,H;
+function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+
+const orbs=[
+  {x:.12,y:.1, r:600,c:[77,143,255],o:.045, vx:.00010,vy:.00007},
+  {x:.85,y:.22,r:500,c:[167,139,250],o:.038,vx:-.00009,vy:.00011},
+  {x:.5, y:.72,r:440,c:[34,211,238], o:.03, vx:.00008,vy:-.00009},
+  {x:.08,y:.85,r:340,c:[77,143,255], o:.025,vx:.00011,vy:.00006},
+  {x:.92,y:.78,r:360,c:[52,211,153], o:.022,vx:-.0001, vy:-.00008},
+];
+
+/* tiny floating particles */
+const PARTS=55;
+const parts=Array.from({length:PARTS},()=>({
+  x:Math.random()*1,y:Math.random()*1,
+  r:Math.random()*1.1+0.3,
+  o:Math.random()*0.25+0.05,
+  vx:(Math.random()-.5)*.00018,
+  vy:(Math.random()-.5)*.00018,
+}));
+
+function drawBg(){
+  ctx.clearRect(0,0,W,H);
+  // orbs
+  orbs.forEach(o=>{
+    o.x+=o.vx; o.y+=o.vy;
+    if(o.x<-.1||o.x>1.1)o.vx*=-1;
+    if(o.y<-.1||o.y>1.1)o.vy*=-1;
+    const g=ctx.createRadialGradient(o.x*W,o.y*H,0,o.x*W,o.y*H,o.r);
+    g.addColorStop(0,`rgba(${o.c.join(',')},${o.o})`);
+    g.addColorStop(1,'transparent');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  });
+  // subtle grid
+  ctx.strokeStyle='rgba(255,255,255,0.016)';
+  ctx.lineWidth=1;
+  const gs=90;
+  for(let x=0;x<W;x+=gs){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
+  for(let y=0;y<H;y+=gs){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+  // particles
+  parts.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0)p.x=1; if(p.x>1)p.x=0;
+    if(p.y<0)p.y=1; if(p.y>1)p.y=0;
+    ctx.beginPath();
+    ctx.arc(p.x*W,p.y*H,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${p.o})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+/* ── SCROLL REVEAL ── */
+const io=new IntersectionObserver(e=>e.forEach(i=>{if(i.isIntersecting)i.target.classList.add('in')}),{threshold:.07});
+document.querySelectorAll('.s').forEach(s=>io.observe(s));
+
+/* ── MODAL DATA ── */
+const mdata={
+  cert1:{
+    ey:'Certificate · American Red Cross',
+    ti:'Adult, Child & Baby First Aid / CPR / AED',
+    or:'American Red Cross (Cruz Roja Americana)',
+    bd:`<p>Nicholas Joel Vallverdu has successfully completed all requirements for the Adult, Child and Baby First Aid/CPR/AED Online program conducted by the American Red Cross.</p><p>This certification qualifies the holder for an in-person Skills Session within 90 days of completion.</p>`,
+    mt:[{k:'Date Completed',v:'September 30, 2025'},{k:'Valid Until',v:'September 30, 2027'},{k:'Certificate ID',v:'0231URE'},{k:'Issuing Body',v:'American Red Cross'}]
+  },
+  cert2:{
+    ey:'Certificate · FMES',
+    ti:'Bloodborne Pathogens & Infection Control',
+    or:'Florida Medical Educational Services (FMES)',
+    bd:`<p>Nicholas Joel Vallverdu earned this certification covering Bloodborne Pathogens and Infection Control protocols as issued by Florida Medical Educational Services (FMES).</p><p>This training covers universal precautions and infection control standards relevant to healthcare and clinical settings.</p>`,
+    mt:[{k:'Date Completed',v:'September 29, 2025'},{k:'Issuing Body',v:'Florida Medical Educational Services (FMES)'}]
+  },
+  rec1:{
+    ey:'Letter of Recommendation · FLVS',
+    ti:'Paula Brusco',
+    or:'Anatomy & Physiology Honors Instructor · Florida Virtual School · February 6, 2026',
+    bd:`<p>I am excited to have the opportunity to write a letter of recommendation for my former student, Nicholas Vallverdu, in Anatomy and Physiology Honors. I reserve Letters of Recommendations for only top tier students whose path might lead them successfully into the medical field.</p><p>Nicholas is a student who not only fits this category of exceptionalism, but he has raised the bar for others. This course demands both discipline in learning and grit to achieve success. During his time with me in the online course, Nicholas created a medical blog that demonstrated his passion for the medical field. His two published posts on the nervous system demonstrated scientific accuracy and his ability to explore information thoroughly, communicate it effectively, and make it accessible to others. This level of academic maturity is rare in high school and speaks to his readiness for college.</p><p>During our Discussion-Based Assessments he routinely demonstrated a sophisticated understanding of the human body. He approached each conversation with curiosity, confidence, and a level of conceptual depth that far exceeded course expectations. His questions were thoughtful, his explanations were precise, and his enthusiasm for medical science was unmistakable. His ability to absorb knowledge was quite remarkable.</p><p>It has been a privilege to teach him, and I look forward to seeing all he will accomplish.</p>`,
+    mt:[{k:'Instructor',v:'Paula Brusco'},{k:'Course',v:'Anatomy & Physiology Honors'},{k:'Institution',v:'Florida Virtual School'},{k:'Date',v:'February 6, 2026'},{k:'Email',v:'Pbrusco@flvs.net'},{k:'Phone',v:'856-442-9698'}]
+  },
+  rec2:{
+    ey:'Letter of Recommendation · FLVS',
+    ti:'Alexandra Smith',
+    or:'Health Science Foundations Teacher · Florida Virtual School · February 2, 2026',
+    bd:`<p>I am pleased to recommend Nicholas Vallverdu, an exceptional young scholar whom I have had the privilege of teaching in Health Science Foundations at Florida Virtual School. Throughout my time working with him, he has consistently demonstrated remarkable academic ability, maturity, and character—qualities that make him an outstanding candidate for any program supporting rigorous academic and professional advancement in the medical field.</p><p>Nicholas stands out as one of the most dedicated and intellectually curious students I have encountered. His strengths in science are particularly noteworthy; he not only masters course content with ease but also actively seeks to deepen his understanding beyond the classroom. He frequently engages in thoughtful discussions, asks insightful questions, and demonstrates a genuine passion for learning—especially in areas related to medicine and human health.</p><p>His academic discipline is equally impressive. Nicholas is consistently punctual, prepared, and meticulous with his assignments. He submits all work on time and to a high standard, reflecting both responsibility and respect for learning. It is rare to find a student who balances such intellectual strength with unwavering reliability.</p><p>In addition to his accomplishments in the classroom, Nicholas is on track to graduate from high school having already earned his Associate of Arts degree—an impressive achievement that speaks to his ambition, diligence, and exceptional time-management skills. His aspiration to pursue a career in medicine is well-aligned with both his natural strengths and his admirable personal qualities.</p><p>I am confident that Nicholas will excel in any collegiate or professional environment he enters. He possesses the intellect, work ethic, and compassion that are essential for success in medicine and beyond. I give him my highest recommendation without reservation.</p>`,
+    mt:[{k:'Teacher',v:'Alexandra Smith'},{k:'Course',v:'Health Science Foundations'},{k:'Institution',v:'Florida Virtual School'},{k:'Date',v:'February 2, 2026'},{k:'Email',v:'alesmith@flvs.net'},{k:'Phone',v:'716-265-0445'}]
+  }
+};
+
+function openM(id){
+  const d=mdata[id]; if(!d)return;
+  document.getElementById('mo-ey').textContent=d.ey;
+  document.getElementById('mo-ti').textContent=d.ti;
+  document.getElementById('mo-or').textContent=d.or;
+  document.getElementById('mo-bd').innerHTML=d.bd;
+  document.getElementById('mo-mt').innerHTML=d.mt.map(m=>`<div class="mm-i"><span class="mm-k">${m.k}</span><span class="mm-v">${m.v}</span></div>`).join('');
+  document.getElementById('mo').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeM(){
+  document.getElementById('mo').classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeOut(e){if(e.target===document.getElementById('mo'))closeM()}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM()});
+</script>
+</body>
+</html>
